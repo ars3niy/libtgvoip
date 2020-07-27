@@ -6,6 +6,9 @@ build
 */Release/*
 
 # Build results
+/Makefile
+/libtgvoip.Makefile
+/libtgvoip.target.mk
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -23,4 +26,3 @@ DerivedData/
 .vs/
 
 xcuserdata/
-autom4te.cache/

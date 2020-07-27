@@ -5,8 +5,8 @@
 //
 
 #ifndef TGVOIP_NO_DSP
-#include "webrtc_dsp/modules/audio_processing/include/audio_processing.h"
-#include "webrtc_dsp/api/audio/audio_frame.h"
+#include <webrtc/modules/audio_processing/include/audio_processing.h>
+#include <webrtc/modules/interface/module_common_types.h>
 #endif
 
 #include "EchoCanceller.h"
@@ -32,18 +32,15 @@ EchoCanceller::EchoCanceller(bool enableAEC, bool enableNS, bool enableAGC){
 	extraConfig.Set(new webrtc::DelayAgnostic(true));
 #endif
 
-	apm=webrtc::AudioProcessingBuilder().Create(extraConfig);
+	apm=webrtc::AudioProcessing::Create(extraConfig);
 
-	webrtc::AudioProcessing::Config config;
-	config.echo_canceller.enabled = enableAEC;
 #ifndef TGVOIP_USE_DESKTOP_DSP
-	config.echo_canceller.mobile_mode = true;
+	apm->echo_cancellation()->Enable(enableAEC);
 #else
-	config.echo_canceller.mobile_mode = false;
+	apm->echo_control_mobile()->Enable(enableAEC);
 #endif
-	config.high_pass_filter.enabled = enableAEC;
-	config.gain_controller2.enabled = enableAGC;
-	apm->ApplyConfig(config);
+	apm->high_pass_filter()->Enable(enableAEC);
+	apm->gain_control()->Enable(enableAGC);
 	
 	webrtc::NoiseSuppression::Level nsLevel;
 #ifdef __APPLE__
@@ -138,9 +135,9 @@ void EchoCanceller::RunBufferFarendThread(){
 			return;
 		}
 		int16_t* samplesIn=(int16_t*)*buf;
-		memcpy(frame.mutable_data(), samplesIn, 480*2);
+		memcpy(frame.data_, samplesIn, 480*2);
 		apm->ProcessReverseStream(&frame);
-		memcpy(frame.mutable_data(), samplesIn+480, 480*2);
+		memcpy(frame.data_, samplesIn+480, 480*2);
 		apm->ProcessReverseStream(&frame);
 		didBufferFarend=true;
 	}
@@ -159,21 +156,21 @@ void EchoCanceller::ProcessInput(int16_t* inOut, size_t numSamples, bool& hasVoi
 	int delay=audio::AudioInput::GetEstimatedDelay()+audio::AudioOutput::GetEstimatedDelay();
 	assert(numSamples==960);
 
-	memcpy(audioFrame->mutable_data(), inOut, 480*2);
+	memcpy(audioFrame->data_, inOut, 480*2);
 	if(enableAEC)
     	apm->set_stream_delay_ms(delay);
 	apm->ProcessStream(audioFrame);
 	if(enableVAD)
     	hasVoice=apm->voice_detection()->stream_has_voice();
-	memcpy(inOut, audioFrame->data(), 480*2);
-	memcpy(audioFrame->mutable_data(), inOut+480, 480*2);
+	memcpy(inOut, audioFrame->data_, 480*2);
+	memcpy(audioFrame->data_, inOut+480, 480*2);
 	if(enableAEC)
     	apm->set_stream_delay_ms(delay);
 	apm->ProcessStream(audioFrame);
 	if(enableVAD){
     	hasVoice=hasVoice || apm->voice_detection()->stream_has_voice();
 	}
-	memcpy(inOut+480, audioFrame->data(), 480*2);
+	memcpy(inOut+480, audioFrame->data_, 480*2);
 #endif
 }
 
