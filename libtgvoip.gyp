@@ -920,6 +920,9 @@
                 'WEBRTC_POSIX',
                 'WEBRTC_LINUX',
               ],
+              'cflags': [
+                '-fPIC -g',
+              ],
               'conditions': [
                 [ '"<!(uname -m)" == "i686"', {
                   'cflags': [
