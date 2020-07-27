@@ -12,6 +12,8 @@
           'WEBRTC_NS_FLOAT',
         ],
         'variables': {
+          'without_pulse%': 0,
+          'without_alsa%': 0,
           'tgvoip_src_loc': '.',
           'official_build_target%': '',
           'linux_path_opus_include%': '<(DEPTH)/../../../Libraries/opus/include',
@@ -922,6 +924,25 @@
                 [ '"<!(uname -m)" == "i686"', {
                   'cflags': [
                     '-msse2',
+                  ],
+                }],
+                [ '"<(without_pulse)" == "1"', {
+                  'sources/': [
+                    ['exclude', '<(tgvoip_src_loc)/os/linux/AudioInputPulse.cpp'],
+                    ['exclude', '<(tgvoip_src_loc)/os/linux/AudioOutputPulse.cpp'],
+                    ['exclude', '<(tgvoip_src_loc)/os/linux/AudioPulse.cpp'],
+                  ],
+                  'defines': [
+                    'WITHOUT_PULSE',
+                  ],
+                }],
+                [ '"<(without_alsa)" == "1"', {
+                  'sources/': [
+                    ['exclude', '<(tgvoip_src_loc)/os/linux/AudioInputALSA.cpp'],
+                    ['exclude', '<(tgvoip_src_loc)/os/linux/AudioOutputALSA.cpp'],
+                  ],
+                  'defines': [
+                    'WITHOUT_ALSA',
                   ],
                 }],
               ],
