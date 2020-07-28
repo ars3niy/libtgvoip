@@ -10,6 +10,13 @@
 #include "../../logging.h"
 #include "../../VoIPController.h"
 
+#ifdef __GNUC__
+#undef _INC_FUNCTIONDISCOVERYKEYS
+#define INITGUID
+#include <functiondiscoverykeys_devpkey.h>
+#undef INITGUID
+#endif
+
 #define BUFFER_SIZE 960
 #define CHECK_RES(res, msg) {if(FAILED(res)){LOGE("%s failed: HRESULT=0x%08X", msg, res); failed=true; return;}}
 #define SCHECK_RES(res, msg) {if(FAILED(res)){LOGE("%s failed: HRESULT=0x%08X", msg, res); return;}}
