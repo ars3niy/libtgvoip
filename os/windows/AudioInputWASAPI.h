@@ -25,10 +25,18 @@
 #ifdef TGVOIP_WINDOWS_DESKTOP
 #include <audiopolicy.h>
 #include <functiondiscoverykeys.h>
+
 #ifdef __GNUC__
 #undef _INC_FUNCTIONDISCOVERYKEYS
 #include <functiondiscoverykeys_devpkey.h>
+#ifndef AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
+#define AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM 0x80000000
 #endif
+#ifndef AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY
+#define AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY 0x08000000
+#endif
+#endif
+
 #else
 #include <audioclient.h>
 #include "WindowsSandboxUtils.h"
