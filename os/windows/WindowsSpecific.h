@@ -2,7 +2,7 @@
 #define LIBTGVOIP_WINDOWS_SPECIFIC_H
 
 #include <string>
-#include <Windows.h>
+#include <windows.h>
 
 namespace tgvoip{
 

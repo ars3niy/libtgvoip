@@ -25,6 +25,10 @@
 #ifdef TGVOIP_WINDOWS_DESKTOP
 #include <audiopolicy.h>
 #include <functiondiscoverykeys.h>
+#ifdef __GNUC__
+#undef _INC_FUNCTIONDISCOVERYKEYS
+#include <functiondiscoverykeys_devpkey.h>
+#endif
 #else
 #include <audioclient.h>
 #include "WindowsSandboxUtils.h"

@@ -10,7 +10,7 @@
 #if WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP
 
 #else
-#include <IPHlpApi.h>
+#include <iphlpapi.h>
 #endif
 #include <assert.h>
 #include "../../logging.h"
