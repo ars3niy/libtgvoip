@@ -80,7 +80,14 @@ endif (WIN32)
 target_include_directories(tgvoip PRIVATE webrtc_dsp ${opus_INCLUDE_DIRS})
 target_compile_options(tgvoip PRIVATE ${webrtc_audio_CFLAGS})
 
-install(TARGETS tgvoip ARCHIVE DESTINATION /usr/local/lib LIBRARY DESTINATION /usr/local/lib)
+if (NOT DEFINED CMAKE_INSTALL_LIBDIR)
+  set(CMAKE_INSTALL_LIBDIR "lib")
+endif()
+if (NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
+  set(CMAKE_INSTALL_INCLUDEDIR "include")
+endif()
+
+install(TARGETS tgvoip ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 
 install(FILES 
     NetworkSocket.h
@@ -102,7 +109,7 @@ install(FILES
     PrivateDefines.h
     OpusEncoder.h
     CongestionControl.h
-    DESTINATION /usr/local/include/tgvoip
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tgvoip"
 )
 
 install(FILES 
@@ -111,7 +118,7 @@ install(FILES
     audio/AudioIO.h
     audio/AudioIOCallback.h
     audio/AudioOutput.h
-    DESTINATION /usr/local/include/tgvoip/audio
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tgvoip/audio"
 )
 
 install(FILES 
@@ -120,5 +127,5 @@ install(FILES
     #video/VideoPacketSender.h
     video/ScreamCongestionController.h
     #video/VideoFEC.h
-    DESTINATION /usr/local/include/tgvoip/video
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tgvoip/video"
 )
