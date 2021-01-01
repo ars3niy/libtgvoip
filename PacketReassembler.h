@@ -11,7 +11,6 @@
 #include <memory>
 
 #include "Buffers.h"
-#include "logging.h"
 
 namespace tgvoip {
 	class PacketReassembler{
